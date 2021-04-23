@@ -59,11 +59,7 @@ namespace ObjectViewer
                     foreach (var key in dictionary.Keys)
                     {
                         object value = dictionary[key];
-                        result.Add(new ObjectNode(value)
-                        {
-                            Name = key.ToString(),
-                            Value = value.ToString()
-                        });
+                        result.Add(GetObjectNode(key.ToString(), value));
                     }
                 }
                 else
@@ -72,11 +68,7 @@ namespace ObjectViewer
                     int i = 0;
                     foreach (object value in collection)
                     {
-                        result.Add(new ObjectNode(value)
-                        {
-                            Name = i.ToString(),
-                            Value = value.ToString()
-                        });
+                        result.Add(GetObjectNode(i.ToString(), value));
                         i++;
                     }
                 }
@@ -91,23 +83,7 @@ namespace ObjectViewer
                     foreach (PropertyInfo property in properties)
                     {
                         object value = property.GetValue(target, null);
-                        Type vType = value?.GetType();
-                        if ((vType?.IsValueType != false && vType?.IsPrimitive != false) || typeof(string).Equals(vType) || vType?.IsEnum == true)
-                        {
-                            result.Add(new ObjectNode()
-                            {
-                                Name = property.Name,
-                                Value = value?.ToString() ?? "null"
-                            });
-                        }
-                        else
-                        {
-                            result.Add(new ObjectNode(value)
-                            {
-                                Name = property.Name,
-                                Value = value?.ToString() ?? "null"
-                            });
-                        }
+                        result.Add(GetObjectNode(property.Name, value));
                     }
                 }
 
@@ -119,27 +95,30 @@ namespace ObjectViewer
                     {
                         object value = field.GetValue(target);
                         Type fType = value?.GetType();
-                        if (fType?.IsValueType != false && fType.IsPrimitive != false)
-                        {
-                            result.Add(new ObjectNode()
-                            {
-                                Name = field.Name,
-                                Value = value?.ToString()
-                            });
-                        }
-                        else
-                        {
-                            result.Add(new ObjectNode(value)
-                            {
-                                Name = field.Name,
-                                Value = value?.ToString()
-                            });
-                        }
+                        result.Add(GetObjectNode(field.Name, value));
                     }
                 }
             }
 
             return result;
+        }
+
+        private static ObjectNode GetObjectNode(string name, object value)
+        {
+            if (IsBasicType(value))
+            {
+                return new ObjectNode() { Name = name, Value = value?.ToString() ?? "null" };
+            }
+            else
+            {
+                return new ObjectNode(value) { Name = name, Value = value?.ToString() ?? "null" };
+            }
+        }
+
+        private static bool IsBasicType(object value)
+        {
+            Type vType = value?.GetType();
+            return ((vType?.IsValueType != false && vType?.IsPrimitive != false) || typeof(string).Equals(vType) || vType?.IsEnum == true);
         }
 
     }

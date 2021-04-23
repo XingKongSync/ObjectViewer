@@ -57,6 +57,12 @@ namespace ObjectViewer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Test1();
+            //Test2();
+        }
+
+        private void Test1()
+        {
             Person p1 = new Person()
             {
                 Name = "Scott",
@@ -82,6 +88,16 @@ namespace ObjectViewer
             p2.Father = p1;
 
             Nodes = ObjectNode.DecodeObject(p1);
+        }
+
+        private void Test2()
+        {
+            Dictionary<int, string> dic = new Dictionary<int, string>();
+            for (int i = 0; i < 10; i++)
+            {
+                dic.Add(i, i.ToString());
+            }
+            Nodes = ObjectNode.DecodeObject(dic);
         }
     }
 }
