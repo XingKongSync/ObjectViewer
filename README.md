@@ -1,5 +1,5 @@
 # ObjectViewer
-A viewer which can Inspect properties and fields of .net object
+A viewer which can inspect properties and fields of .NET object
 
 ## 简介
 一个可以在运行时查看 .NET 对象的属性和字段的对象查看器 DEMO
