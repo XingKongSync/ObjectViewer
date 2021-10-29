@@ -82,7 +82,9 @@ namespace ObjectViewer
                 {
                     foreach (PropertyInfo property in properties)
                     {
-                        object value = property.GetValue(target, null);
+                        if (!property.CanRead)
+                            continue;
+                        object value = property.GetValue(target);
                         result.Add(GetObjectNode(property.Name, value));
                     }
                 }
